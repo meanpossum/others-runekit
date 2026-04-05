@@ -1,12 +1,16 @@
 #!/bin/bash
 
-# Export APPRUN if running from an extracted image
-self="$(readlink -f -- $0)"
+self="$(readlink -f -- "$0")"
 here="${self%/*}"
 APPDIR="${APPDIR:-${here}}"
 
-# Export SSL certificate
-export SSL_CERT_FILE="${APPDIR}/opt/_internal/certs.pem"
-export PYTHONHOME="${APPDIR}/opt/python3.9"
+# If you later bundle a certs.pem, you can export:
+# export SSL_CERT_FILE="${APPDIR}/usr/share/runekit/certs.pem"
 
-exec $APPDIR/usr/bin/runekit $@
+# Your Python lives here:
+export PYTHONHOME="${APPDIR}"
+
+# Your entry point is python3 main.py, not a compiled 'runekit' binary:
+export PYTHONPATH="${APPDIR}/usr/lib/python3.9/site-packages"
+
+exec "${APPDIR}/usr/bin/python3" "${APPDIR}/../main.py" "$@"
