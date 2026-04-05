@@ -1,0 +1,17 @@
+#!/bin/bash
+
+self="$(readlink -f -- "$0")"
+here="$(dirname "$self")"
+APPDIR="${APPDIR:-$here}"
+
+# ----- QT environment variables for RuneKit -----
+# Do not use Discrete Nvidia GPU, should fall back to default GPU
+export QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu --disable-gpu-sandbox --no-sandbox"
+export QT_QPA_PLATFORM=xcb
+export QT_LOGGING_RULES="runekit*=true"
+
+# ----- Python setup -----
+export PYTHONHOME="$APPDIR"
+export PYTHONPATH="$APPDIR/lib/python3.9/site-packages"
+
+exec "$APPDIR/usr/bin/runekit" "$@"
