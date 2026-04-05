@@ -14,4 +14,4 @@ export QT_LOGGING_RULES="runekit*=true"
 export PYTHONHOME="$APPDIR"
 export PYTHONPATH="$APPDIR/lib/python3.9/site-packages"
 
-exec "$APPDIR/usr/bin/runekit" "$@"
+exec "$APPDIR/usr/bin/python3" -m runekit.main "$@"
