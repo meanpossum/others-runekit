@@ -17,7 +17,7 @@ pyobjc-framework-Quartz = [{ version="7.3", platform="darwin" }]
 pyobjc-framework-ApplicationServices = [{ version="7.3", platform="darwin" }]
 pyobjc-framework-CoreText = [{ version="7.3", platform="darwin" }]
 click = "^8.0.1"
-psutil = "^5.8.0"
+psutil = "^7.2"
 opencv-python-headless = "^4.5.3.56"
 
 [tool.poetry.dev-dependencies]
