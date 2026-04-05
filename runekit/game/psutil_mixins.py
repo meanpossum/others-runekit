@@ -71,12 +71,8 @@ class PsUtilNetStat(PsUtilBaseMixin):
         raise last_exc
 
     def __get_connections_mode(self, mode_: int):
-        if mode_ is MODE_PROCESS:
-            return psutil.Process(self.pid).connections()
-        elif mode_ is MODE_GLOBAL:
-            return [item for item in psutil.net_connections() if item.pid == self.pid]
-        else:
-            raise ValueError(f"Unknown mode {mode_}")
+        return [item for item in psutil.net_connections() if item.pid == self.pid]
+
 
     @Slot()
     def __update_world(self):
