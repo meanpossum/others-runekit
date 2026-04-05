@@ -21,3 +21,4 @@ To force using AMD GPU
 ```bash
 env 'QTWEBENGINE_CHROMIUM_FLAGS=--disable-gpu --disable-gpu-sandbox --no-sandbox' 'QT_QPA_PLATFORM=xcb' poetry run python main.py
 ```
+
