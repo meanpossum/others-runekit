@@ -9,3 +9,4 @@ runekit/_resources.py
 *.AppImage
 *.pyo
 venv
+runekit.AppDir
