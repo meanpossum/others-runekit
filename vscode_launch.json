@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Runekit (QtWebEngine)",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "QTWEBENGINE_CHROMIUM_FLAGS": "--disable-gpu --disable-gpu-sandbox --no-sandbox",
+                "QT_QPA_PLATFORM": "xcb",
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            },
+            "args": []
+        }
+    ]
+}
