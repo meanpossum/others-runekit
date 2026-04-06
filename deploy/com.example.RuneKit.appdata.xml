@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id>RuneKit</id>
+    <id>com.example.RuneKit</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-or-later</project_license>
     <name>RuneKit</name>
     <summary>Alt1‑compatible overlay and capture helper for RuneScape 3</summary>
     <description>
-        <p>Alt1‑compatible overlay and capture helper for RuneScape 3. Lets you mark items, overlays, and regions in‑game and capture screenshots and data for later analysis.</p>
+        <p>Alt1‑compatible overlay and capture helper for RuneScape 3. This is a longer paragraph to fix the fucking xml validation tules</p>
+        <p>Integrates with RuneScape to provide overlays, screenshot capture, and data extraction.</p>
     </description>
     <launchable type="desktop-id">RuneKit.desktop</launchable>
     <url type="homepage">https://github.com/whs/runekit</url>
-    <developer id="RuneKit_developer">
+    <developer id="whs">
         <name>whs</name>
     </developer>
     <content_rating type="oars-1.1"/>
