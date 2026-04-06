@@ -1,16 +1,14 @@
 #!/bin/bash
 
 self="$(readlink -f -- "$0")"
-here="${self%/*}"
-APPDIR="${APPDIR:-${here}}"
+here="$(dirname "$self")"
+APPDIR="${APPDIR:-$here}"
 
-# If you later bundle a certs.pem, you can export:
-# export SSL_CERT_FILE="${APPDIR}/usr/share/runekit/certs.pem"
+export QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu --disable-gpu-sandbox --no-sandbox"
+export QT_QPA_PLATFORM=xcb
+export QT_LOGGING_RULES="runekit*=true"
 
-# Your Python lives here:
-export PYTHONHOME="${APPDIR}"
+export PYTHONHOME="$APPDIR"
+export PYTHONPATH="$APPDIR/usr/lib/python3.9/site-packages"
 
-# Your entry point is python3 main.py, not a compiled 'runekit' binary:
-export PYTHONPATH="${APPDIR}/usr/lib/python3.9/site-packages"
-
-exec "${APPDIR}/usr/bin/python3" "${APPDIR}/../main.py" "$@"
+exec "$APPDIR/usr/bin/python3" -m runekit.main "$@"
