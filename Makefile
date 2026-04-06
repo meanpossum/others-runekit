@@ -1,4 +1,11 @@
-LINUXDEPLOY ?= linuxdeploy-$(shell uname -m).AppImage
+ARCH := $(shell uname -m)
+LINUXDEPLOY ?= tools/linuxdeploy-$(ARCH).AppImage
+
+$(LINUXDEPLOY):
+	@echo "linuxdeploy not found; download it from https://github.com/linuxdeploy/linuxdeploy/releases"
+	@echo "and put it as:"; \
+	echo "  $@"; \
+	exit 1
 
 dev: runekit/_resources.py
 
@@ -25,14 +32,18 @@ dist/RuneKit.app.zip: dist/RuneKit.app
 
 # AppImage
 
-build/python3.9.7.AppImage:
+build/python3.9.1.AppImage:
 	mkdir build || true
-	wget https://github.com/niess/python-appimage/releases/download/python3.9/python3.9.1-cp39-cp39-manylinux1_x86_64.AppImage -O "$@"
+	wget https://github.com/niess/python-appimage/releases/download/python3.9/python3.9.25-cp39-cp39-manylinux2014_x86_64.AppImage -O "$@"
 	chmod +x "$@"
 
-build/appdir: build/python3.9.7.AppImage
+build/appdir: build/python3.9.1.AppImage
 	$< --appimage-extract
 	mv squashfs-root build/appdir
+
+	# Copy real Python into usr/bin
+	cp build/appdir/opt/python3.9/bin/python3.9 build/appdir/usr/bin/python3.9
+	cp build/appdir/opt/python3.9/bin/python3   build/appdir/usr/bin/python3
 
 dist/RuneKit.AppImage: dist/runekit.tar.gz build/appdir deploy/runekit-appimage.sh
 	build/appdir/usr/bin/python3 -m pip install dist/runekit.tar.gz
