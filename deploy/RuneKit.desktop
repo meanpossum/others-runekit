@@ -3,5 +3,5 @@ Type=Application
 Name=RuneKit
 Exec=runekit
 Comment=Alt1-compatible toolbox for RuneScape 3
-Icon=python
 Categories=Game;
+Icon=python

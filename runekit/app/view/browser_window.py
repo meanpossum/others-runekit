@@ -90,6 +90,7 @@ class BrowserWindow(GameSnapMixin, QMainWindow):
 
     def get_page(self) -> QWebEnginePage:
         page = self.page_class(self.app.get_web_profile(), self.browser)
+        print(f"MP9********Getting {page.url=}")
         page.setWebChannel(Alt1WebChannel(app=self.app, parent=self.browser))
         page.geometryChangeRequested.connect(self.on_geometry_change)
         page.iconChanged.connect(self.on_icon_changed)
