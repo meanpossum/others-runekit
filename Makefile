@@ -1,8 +1,13 @@
+BUILDDIR := ./build/appdir
+DEPLOYDIR := ./deploy
+
+PIP := ./venv/bin/python3 -m pip
+
 ARCH := $(shell uname -m)
 LINUXDEPLOY ?= tools/linuxdeploy-$(ARCH).AppImage
 
 $(LINUXDEPLOY):
-	@echo "linuxdeploy not found; download it from https://github.com/linuxdeploy/linuxdeploy/releases"
+	@echo "linuxdeploy not found; download it from https://github.com/linux$(DEPLOYDIR)/linux$(DEPLOYDIR)/releases"
 	@echo "and put it as:"; \
 	echo "  $@"; \
 	exit 1
@@ -13,13 +18,11 @@ runekit/_resources.py: resources.qrc $(wildcard runekit/**/*.js) $(wildcard rune
 	pyside2-rcc $< -o $@
 
 # Sdist
-
 dist/runekit.tar.gz: main.py poetry.lock runekit/_resources.py $(wildcard runekit/**/*)
 	poetry build -f sdist
 	cd dist; cp runekit-*.tar.gz runekit.tar.gz
 
 # Mac
-
 dist/RuneKit.app: RuneKit.spec main.py poetry.lock runekit/_resources.py $(wildcard runekit/**/*)
 	pyinstaller -w -n RuneKitApp --noconfirm \
 		--exclude-module tkinter \
@@ -31,28 +34,32 @@ dist/RuneKit.app.zip: dist/RuneKit.app
 	cd dist; zip -r -9 RuneKit.app.zip RuneKit.app
 
 # AppImage
+$(BUILDDIR): dist/runekit.tar.gz
+	# Create the AppDir structure
+# 	rm -rf $(BUILDDIR)
 
-build/python3.9.1.AppImage:
-	mkdir build || true
-	wget https://github.com/niess/python-appimage/releases/download/python3.9/python3.9.25-cp39-cp39-manylinux2014_x86_64.AppImage -O "$@"
-	chmod +x "$@"
+	mkdir -p $(BUILDDIR)/usr/bin
+	cp /usr/bin/python3 $(BUILDDIR)/usr/bin/
 
-build/appdir: build/python3.9.1.AppImage
-	$< --appimage-extract
-	mv squashfs-root build/appdir
+	mkdir -p $(BUILDDIR)/usr/lib
+	cp -r /usr/lib/python3.9 $(BUILDDIR)/usr/lib/
 
-	# Copy real Python into usr/bin
-	cp build/appdir/opt/python3.9/bin/python3.9 build/appdir/usr/bin/python3.9
-	cp build/appdir/opt/python3.9/bin/python3   build/appdir/usr/bin/python3
+	mkdir -p $(BUILDDIR)/usr/share/icons/hicolor/256x256/apps
+	cp $(DEPLOYDIR)/python.png $(BUILDDIR)/usr/share/icons/hicolor/256x256/apps/
+	cp $(DEPLOYDIR)/python.png $(BUILDDIR)/
 
-dist/RuneKit.AppImage: dist/runekit.tar.gz build/appdir deploy/runekit-appimage.sh
-	build/appdir/usr/bin/python3 -m pip install dist/runekit.tar.gz
-	rm $(wildcard build/appdir/*.desktop) $(wildcard build/appdir/usr/share/applications/*.desktop) $(wildcard build/appdir/usr/share/metainfo/*)
-	cp deploy/RuneKit.desktop build/appdir/
-	cp deploy/RuneKit.desktop build/appdir/usr/share/applications/
-	cp deploy/com.example.RuneKit.appdata.xml build/appdir/usr/share/metainfo/
-	cp deploy/runekit-appimage.sh build/appdir/AppRun
-	$(LINUXDEPLOY) --appdir build/appdir --output appimage
+	mkdir -p $(BUILDDIR)/usr/share/applications
+	cp $(DEPLOYDIR)/RuneKit.desktop $(BUILDDIR)/usr/share/applications/
+
+	mkdir -p $(BUILDDIR)/usr/share/metainfo
+	cp $(DEPLOYDIR)/com.example.RuneKit.appdata.xml $(BUILDDIR)/usr/share/metainfo/
+	
+	cp $(DEPLOYDIR)/RuneKit.desktop $(BUILDDIR)/
+	cp $(DEPLOYDIR)/runekit-appimage.sh $(BUILDDIR)/AppRun
+
+dist/RuneKit.AppImage: dist/runekit.tar.gz $(BUILDDIR) $(DEPLOYDIR)/runekit-appimage.sh
+	$(PIP) install dist/runekit.tar.gz
+	$(LINUXDEPLOY) --appdir $(BUILDDIR) --output appimage
 	cp RuneKit-*.AppImage "$@"
 
 .PHONY: dev
