@@ -254,7 +254,13 @@ class Alt1Api(QObject):
             self.logger.warning("bindGetRegionRaw(%d) but image not bound", id)
             return ""
 
-        return image_to_stream(image.image, x, y, w, h, mode="rgba", ignore_limit=True)
+        # DEBUG:
+        self.logger.info(
+            "bindGetRegionRaw: id=%d, x=%d, y=%d, w=%d, h=%d, image=%s",
+            id, x, y, w, h, repr(image.image)
+        )
+        
+        return image_to_stream(image.image, x, y, w, h, mode="rgb", ignore_limit=True) #"rgba"
 
     # endregion
 
@@ -466,6 +472,12 @@ class RuneKitRequestProcess(QRunnable):
 
             func = data["func"]
             del data["func"]
+            
+            print("RPC FUNC =", repr(func))
+            print("API TYPE =", type(self.handler.api).__name__)
+            print("API RPC_FUNCS =", list(self.handler.api.rpc_funcs.keys()))
+            print("API LOCATION =", self.handler.api.__class__.__module__)
+
             self.handler.logger.debug("RPC: %s(%s)", func, repr(data))
 
             out = self.handler.api.rpc_funcs[func](**data)

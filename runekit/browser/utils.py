@@ -64,14 +64,14 @@ def image_to_stream(
     y=0,
     width=None,
     height=None,
-    mode="bgra",
+    mode="RGB", #"bgra",
     ignore_limit=False,
 ) -> bytes:
     if isinstance(image, np.ndarray):
         out = np_crop(image, x, y, width, height)
         out = ensure_image(out, mode).tobytes()
     else:
-        assert image.mode == "RGBA"
+        assert image.mode == "RGB" #"RGBA"
 
         if width is None:
             width = image.width

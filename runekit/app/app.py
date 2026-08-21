@@ -26,6 +26,16 @@ class App:
         self.manifest = manifest
         self.game_instance = game_instance
         self.source_url = source_url
+        
+        self.window = None
+        self.alt1api = None
+        self.web_profile = None
+
+        # Force API creation *before* WebProfile
+        self.get_api()
+
+        self.api = self.alt1api
+        
 
     def close(self):
         if self.window:
